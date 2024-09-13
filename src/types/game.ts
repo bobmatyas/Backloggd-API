@@ -4,17 +4,17 @@ export type userInfo = {
     profile: string;
     username: string;
     bio: string;
-    favoriteGames?: favoriteGames[];
     recentlyPlayed?: recentlyPlayed[];
+	currentlyPlaying?: currentlyPlaying[];
 } & userStats;
 
-export type favoriteGames = {
-    name: string;
-    image: string;
-    mostFavorite?: boolean;
-};
 
 export type recentlyPlayed = {
+    name: string;
+    image: string;
+};
+
+export type currentlyPlaying = {
     name: string;
     image: string;
 };
