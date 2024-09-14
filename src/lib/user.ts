@@ -1,7 +1,7 @@
 import axios, { Axios, AxiosError } from "axios";
 import cheerio from "cheerio";
 import config from "../config";
-import { recentlyPlayed, currentlyPlaying, userInfo } from "../types/game";
+import { favoriteGames, recentlyPlayed, currentlyPlaying, userInfo } from "../types/game";
 import { extractGame } from "../utils/game";
 
 async function getUserInfo(
@@ -40,7 +40,9 @@ async function getUserInfo(
   const hasBio = $("#bio-body").has("p").length === 0;
   const userBio = hasBio ? $("#bio-body").text().trim() : "Nothing here!"
   userinfo.bio = userBio;
+  const favoriteGames: favoriteGames[] = [];
   const recentlyPlayed: recentlyPlayed[] = [];
+  const favoritesDiv = $("#profile-favorites").children();
   const recentlyPlayedDiv = $("#profile-journal").children();
   const userStatsDiv = $("#profile-stats").children();
   const userStats: { [key: string]: number } = {};
@@ -48,6 +50,13 @@ async function getUserInfo(
     const value = $(el).children("h1").text();
     const key = $(el).children("h4").text();
     userStats[key] = parseInt(value);
+  });
+  favoritesDiv.each((i, el) => {
+    const game = extractGame($(el));
+    if (game) {
+      const mostFavorite = el.attribs.class.includes("ultimate_fav");
+      favoriteGames.push({ ...game, mostFavorite });
+    }
   });
   recentlyPlayedDiv.each((i, el) => {
     const game = extractGame($(el));
@@ -91,7 +100,7 @@ async function getUserInfo(
 			currentlyPlaying.push({ ...game });
 		}
 	  });
-	
+	userinfo.favoriteGames = favoriteGames;
 	userinfo.recentlyPlayed = recentlyPlayed;
 	userinfo.currentlyPlaying = currentlyPlaying;
 	userinfo = { ...userinfo, ...userStats };
