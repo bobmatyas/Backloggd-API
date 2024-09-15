@@ -8,11 +8,8 @@ This version adds a "currently playing" object to the API response.
 To use this API, you will need Node.js and npm installed on your machine. You can install the necessary dependencies by running:
 
 ```bash
-git clone https://github.com/Qewertyy/Backloggd-API && cd Backloggd-API && npm i && npm start
+git clone https://github.com/bobmatyas/Backloggd-API && cd Backloggd-API && npm i && npm start
 ```
-
-## Deploy to vercel
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FQewertyy%2FBackloggd-API&demo-title=Backloggd%20API&demo-description=Unoffical%20Backloggd%20API&demo-url=https%3A%2F%2Fbackloggd-api.vercel.app%2F)
 
 ## Usage
 
