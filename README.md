@@ -1,7 +1,8 @@
-# Unofficial API for [Backloggd](https://www.backloggd.com) written in Typescript.
+# Forked Version of the Unofficial API for [Backloggd](https://www.backloggd.com) written in Typescript.
 
-## Features
-You are welcome to open [issues](https://github.com/Qewertyy/Backloggd-API/issues/new) for new features.
+Original at [Qewertyy/Backloggd-API](https://github.com/Qewertyy/Backloggd-API)
+
+This version adds a "currently playing" object to the API response.
 
 ## Deploy Locally
 To use this API, you will need Node.js and npm installed on your machine. You can install the necessary dependencies by running:
