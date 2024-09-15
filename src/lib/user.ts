@@ -1,39 +1,14 @@
-import axios, { Axios, AxiosError } from "axios";
 import cheerio from "cheerio";
-import config from "../config";
 import { favoriteGames, recentlyPlayed, currentlyPlaying, userInfo } from "../types/game";
 import { extractGame } from "../utils/game";
+import { queryPage } from "../utils/query-page";
 
 async function getUserInfo(
   username: string
 ): Promise<userInfo | { error: string; status: number }> {
-  const referer = `https://${config.baseUrl}/search/users/${username}`;
-  const response = await axios
-    .get(`https://${config.baseUrl}/u/${username}`, {
-      headers: {
-        ...config.headers,
-        "Turbolinks-Referrer": referer,
-        Referer: referer,
-      },
-    })
-    .catch((err) => err);
-
-  if (response instanceof AxiosError) {
-    console.log(response.response?.status);
-    let error, status;
-    if (response.response?.status === 404) {
-      error = "User not found";
-      status = 404;
-    } else {
-      error = response.message;
-      status = response.response?.status || 500;
-    }
-    return {
-      error: error,
-      status: status,
-    };
-  }
-  const $ = cheerio.load(response.data);
+ 
+	const userDetails = await queryPage(`/u/${username}`, username);
+  const $ = cheerio.load(userDetails);
   let userinfo: userInfo = {} as userInfo;
   userinfo.username = username;
   userinfo.profile = $("meta[property='og:image']").attr("content") || "https://backloggd.b-cdn.net/no_avatar.jpg";
@@ -65,33 +40,9 @@ async function getUserInfo(
     }
   });
 
-  const currentlyPlayingResponse = await axios
-  .get(`https://${config.baseUrl}/u/${username}/games/added/type:playing/`, {
-	headers: {
-	  ...config.headers,
-	  "Turbolinks-Referrer": referer,
-	  Referer: referer,
-	},
-  })
-  .catch((err) => err);
-
-	if (currentlyPlayingResponse instanceof AxiosError) {
-	console.log(currentlyPlayingResponse.response?.status);
-	let error, status;
-	if (currentlyPlayingResponse.response?.status === 404) {
-		error = "User not found";
-		status = 404;
-	} else {
-		error = currentlyPlayingResponse.message;
-		status = currentlyPlayingResponse.response?.status || 500;
-	}
-	return {
-		error: error,
-		status: status,
-	};
-	}
 	
-	const $currentlyPlaying = cheerio.load(currentlyPlayingResponse.data);
+	const currentlyPlayingResponse = await queryPage(`/u/${username}/games/added/type:playing/`, username);
+	const $currentlyPlaying = cheerio.load(currentlyPlayingResponse);
 	const currentlyPlaying: currentlyPlaying[] = [];
 	const currentlyPlayingHolder = $currentlyPlaying("#game-lists").children();
 	currentlyPlayingHolder.each((i, el) => {

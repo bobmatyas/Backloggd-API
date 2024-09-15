@@ -12,4 +12,4 @@ function extractGame(element: Cheerio<Element>) {
     return null;
 }
 
-export { extractGame}
+export { extractGame }
